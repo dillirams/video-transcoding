@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Admin {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+
+  courses   Course[]
+}
+
+model User {
+  id           String         @id @default(uuid())
+  name         String
+  email        String         @unique
+  password     String
+  createdAt    DateTime       @default(now())
+
+  purchases    CourseBought[]
+}
+
+model Course {
+  id           String         @id @default(uuid())
+  name         String
+  description  String?
+  imageUrl     String
+  price        Float
+  createdAt    DateTime       @default(now())
+
+  createdBy    String
+  admin        Admin          @relation(fields: [createdBy], references: [id])
+
+  lectures     Lecture[]
+  purchases    CourseBought[]
+}
+
+model Lecture {
+  id          String   @id @default(uuid())
+  title       String
+  orginalVideoUrl    String?
+  masterPlayListUrl String?
+  status VideoStatus @default(PENDING)
+  duration Int?
+  position    Int
+  isPreview   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  courseId    String
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+}
+
+model CourseBought {
+  id         String   @id @default(uuid())
+
+  userId     String
+  courseId   String
+
+  purchasedAt DateTime @default(now())
+
+  user       User     @relation(fields: [userId], references: [id])
+  course     Course   @relation(fields: [courseId], references: [id])
+
+  @@unique([userId, courseId])
+}
+
+enum VideoStatus{
+    PENDING
+  UPLOADED
+  PROCESSING
+  READY
+  FAILED
+}
