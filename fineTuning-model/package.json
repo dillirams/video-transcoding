@@ -1,0 +1,24 @@
+{
+  "name": "finetuning-model",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "upload":"bun run ./src/script/uploadDataset.ts",
+    "createfinetune":"bun run ./src/script/createFineTune.ts",
+    "testmodel":"bun run ./src/script/testModel.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "openai": "^6.37.0"
+  }
+}

@@ -3,11 +3,15 @@ import { create } from "zustand";
 
 interface CourseState{
     upload:boolean,
-    setUpload:(upload:boolean)=>void
+    chatAi:boolean
+    setUpload:(upload:boolean)=>void,
+    setChatAi:(cahtAi:boolean)=>void
 }
 
 export const useCourseState= create<CourseState>((set)=>({
 upload:false,
-setUpload:(upload)=>set({upload})
+chatAi:false,
+setUpload:(upload)=>set({upload}),
+setChatAi:(chatAi)=>set({chatAi})
 
 }))

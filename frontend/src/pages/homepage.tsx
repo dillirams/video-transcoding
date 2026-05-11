@@ -7,13 +7,18 @@ import {
   GraduationCap,
   HeartHandshake,
   Leaf,
+  MessageCircle,
 } from "lucide-react";
 import { Footer } from "../component/footer";
 import { Button } from "../component/button";
+import { useCourseState } from "../store/create";
+import { ChatWithAi } from "../component/chatWithAi";
 
 export function Dashboard() {
   const navigate = useNavigate();
   const [mobileMenu, setMobileMenu] = useState(false);
+
+  const {chatAi, setChatAi}=useCourseState();
 
   const pathways = [
     {
@@ -164,6 +169,8 @@ export function Dashboard() {
             />
           </div>
 
+         
+
           <div className="absolute -bottom-8 -left-8 bg-white p-6 rounded-3xl shadow-lg max-w-xs">
             <p className="italic text-[#d97757] text-xl">
               “Education is a shared cup of tea.”
@@ -174,6 +181,20 @@ export function Dashboard() {
           </div>
         </div>
       </section>
+
+      <div className="">
+        <button
+  onClick={()=>{setChatAi(!chatAi)}}
+  className="fixed top-1/2 right-0 -translate-y-1/2 z-50 flex items-center gap-2 rounded-l-2xl bg-blue-600 px-4 py-3 text-white shadow-lg transition-all duration-300 hover:-translate-x-1 hover:shadow-2xl"
+>
+  <MessageCircle className="h-5 w-5" />
+  <span className="font-medium whitespace-nowrap">Ask AI</span>
+</button>
+<div>
+  {chatAi&&<ChatWithAi/>}
+</div>
+        
+      </div>
 
       {/* Philosophy Section */}
       <section className="bg-[#234b33] text-white py-24 px-6">
@@ -240,7 +261,7 @@ export function Dashboard() {
         </div>
       </section>
 
-      {/* CTA */}
+      
       <section className="px-6 pb-24">
         <div className="max-w-5xl mx-auto bg-white rounded-[3rem] py-16 px-8 text-center shadow-sm">
           <h2 className="text-4xl md:text-6xl font-serif">
