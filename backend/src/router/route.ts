@@ -11,6 +11,7 @@ import { getAllCourses } from "../controller/user/getAllCourses";
 import { buyCourse } from "../controller/user/buycourse";
 import { getUserCourse } from "../controller/user/getCourse";
 import { addLecture } from "../controller/admin/addLecture";
+import { verifyPayment } from "../controller/user/verifyPayment";
 
 export const appRouter=Router();
 
@@ -24,4 +25,5 @@ appRouter.get('/tutorDetail',middleware,getTutor)
 appRouter.post('/addLecture',middleware,addLecture)
 appRouter.get('/getAllCourses', getAllCourses);
 appRouter.post('/buyCourse', middleware, buyCourse);
+appRouter.post("/verify-payment", middleware, verifyPayment)
 appRouter.get('/getUserCourse', middleware, getUserCourse);

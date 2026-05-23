@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { UserNavbar } from "../component/userNavbar";
 import { StudentCourseCard } from "../component/studentCourseCard";
-import { Compass, Search } from "lucide-react";
+import { Compass, Currency, Search } from "lucide-react";
 import { Footer } from "../component/footer";
 import { useNavigate } from "react-router-dom";
 
@@ -29,16 +29,60 @@ export function UserDashboard() {
     }
   }
 
-  async function handleBuyCourse(courseId: string) {
+  async function handleBuyCourse(courseId: string, amount:number) {
     try {
       setBuyingId(courseId);
+      console.log(amount);
       const res = await axios.post(
         `http://localhost:3000/v1/api/buyCourse?courseId=${courseId}`,
-        {},
+        {amount:amount},
         { withCredentials: true }
       );
-      alert(res.data.message || "Course purchased successfully!");
-      navigate("/my-courses");
+      const order=res.data.order
+      const course=res.data.course
+      console.log(courseId);
+      console.log(course.id);
+
+      const option={
+        key:"rzp_test_Ss4Ju1gIrxrZ2f",
+        amount:order.amount,
+        Currency: order.currency,
+        name:"Brothers Bhutan Academy",
+        description: course.title,
+        order_id:order.id,
+        handler:async function (response:any) {
+          
+          const verify=await axios.post("http://localhost:3000/v1/api/verify-payment", {
+            ...response,
+            courseId
+          },{
+            withCredentials:true
+          });
+
+          if(verify.data.success){
+            alert("payment successful")
+            navigate("/my-courses");
+          }
+          
+        },
+        prefill: {
+          name: "Student",
+          email: "student@gmail.com",
+        },
+
+        theme: {
+          color: "#2563eb",
+        },
+      
+      }
+
+      const razorpay=new (window as any).Razorpay(
+        option
+      );
+
+      razorpay.open();
+
+     
     } catch (error: any) {
       alert(error?.response?.data?.message || "Failed to purchase course");
     } finally {

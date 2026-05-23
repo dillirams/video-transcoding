@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import { prisma } from "../../../lib/prisma";
+import { razorpay } from "../../config/razorpay";
 
 export async function  buyCourse(req:Request, res:Response) {
     const userId=req.id as string;
@@ -22,15 +23,35 @@ export async function  buyCourse(req:Request, res:Response) {
          if(!courseId){
             return
          }
-        const courseBought=await prisma.courseBought.create({
-            data:{
-                courseId:courseId,
-                userId:userId
-            }
-        })
 
+        const amount=parseFloat(req.body.amount)
+
+        console.log("the amount is",amount);
+
+        if(amount!=course.price){
+            res.status(404).json({
+                message:"invalid amount"
+            })
+            return
+        }
+
+        console.log("hello world");
+
+        const option={
+            amount:amount*100,
+            currency:"INR",
+            receipt: `receipt_${Date.now()}`
+        }
+        console.log("the option is ",option);
+
+        const order=await razorpay.orders.create(option)
+
+       
         res.status(200).json({
-            message:"course created successfully"
+            success:true,
+            message:"course created successfully",
+            order:order,
+            course:course
         })
 
     }catch(e){

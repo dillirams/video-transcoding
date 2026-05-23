@@ -14,7 +14,7 @@ interface StudentCourseCardProps {
     };
   };
   isPurchased?: boolean;
-  onAction: (courseId: string) => void;
+  onAction: (courseId: string, price:number) => void;
   loading?: boolean;
 }
 
@@ -89,7 +89,7 @@ export function StudentCourseCard({
           variant="primary"
           fullWidth
           loading={loading}
-          onClick={() => onAction(course.id)}
+          onClick={() => onAction(course.id, course.price)}
           className={isPurchased ? "bg-[#234b33] hover:bg-[#1a3826]" : "bg-[#2c3e50] hover:bg-[#1a252f]"}
         >
           <div className="flex items-center justify-center gap-2">
